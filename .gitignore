@@ -3,9 +3,7 @@
 
 # app/db/sampple.db
 # app/db
-.DS_Store
-app/.DS_Store
-app/public/img
+./app/.DS_Store
 
 ### Node ###
 # Logs
