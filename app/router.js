@@ -1,23 +1,18 @@
 const express = require("express");
 const router = express.Router();
+
 const path = require("path");
 const CategoriaController = require('./controller/CategoriaController');
-const ProdutoController = require('./controller/ProdutoController');
-const UsuarioController = require('./controller/UsuarioController');
-const RestauranteController = require('./controller/RestauranteController');
 const EnderecoController = require('./controller/EnderecoController');
-const OpcaoController = require('./controller/OpcaoController');
-const CarrinhoController = require('./controller/CarrinhoController');
-const PedidoController = require('./controller/PedidoController');
 const ItemPedidoController = require('./controller/ItemPedidoController');
+const OpcaoController = require('./controller/OpcaoController');
+const PedidoController = require('./controller/PedidoController');
+const ProdutoController = require('./controller/ProdutoController');
+const RestauranteController = require('./controller/RestauranteController');
+const UsuarioController = require('./controller/UsuarioController');
 const { findConnections, sendMessage } = require('./websocket');
 
-// const parseStringAsArray = require('../utils/parseStringAsArray');
-
-const bcrypt = require('bcryptjs');
-const app = express();
 const nodemailer = require('nodemailer');
-const { request } = require("https");
 
 router.use('/', express.static(path.join(__dirname + '/public')), function (req, res, next) {
   next();
@@ -25,7 +20,6 @@ router.use('/', express.static(path.join(__dirname + '/public')), function (req,
 
 // ===================== Ações ============================================
 router.post("/verificar_login", (req, res) => {
-
   callback = (result) => {
     res.json(result)
   }
@@ -72,10 +66,8 @@ router.post("/envio_email", (req, res) => {
   });
 });
 
-
 router.post("/login", (req, res) => {
   function callback(row, usuarioID) {
-
     function callbackToken(token, usuarioID) {
       res.json({ "status": 1, token, usuarioID });
     }
@@ -92,28 +84,25 @@ router.post("/login", (req, res) => {
   UsuarioController.loginUsuario(req.body.email, req.body.senha, callback);
 });
 // ========================================================================
-
 router.post("/gerarsenha", (req, res) => {
-
   function callback(status) {
     res.json({ status });
   }
+
   UsuarioController.gerarsenha(req.body.email, req.body.senha, callback);
 });
-
-
-// ===================== Categorias ============================================
+// ===================== Categorias =======================================
 router.get("/categorias", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   CategoriaController.selectAllCategorias(callback);
 });
 // ========================================================================
 
 // ===================== Endereço =========================================
 router.post("/enderecos", function (req, res) {
-
   EnderecoController.insertEndereco(
     req.body.cep,
     req.body.estado,
@@ -132,6 +121,7 @@ router.get("/enderecos", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   EnderecoController.selectAllEnderecos(callback);
 });
 
@@ -139,11 +129,13 @@ router.get("/enderecos/:id", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   EnderecoController.selectIdEndereco(callback, req.params.id);
 });
 
 router.delete("/enderecos/:id", (req, res) => {
   EnderecoController.deleteEndereco(req.params.id);
+
   res.sendStatus(200);
 });
 // ========================================================================
@@ -181,6 +173,7 @@ router.get("/produtos", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   ProdutoController.selecionarTodosProdutos(callback);
 });
 
@@ -188,18 +181,19 @@ router.get("/produtos/pesquisa/:nome", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   if (req.params.nome == 0) {
     ProdutoController.selecionarTodosProdutos(callback, true);
   } else {
     ProdutoController.selectTextProdutos(callback, req.params.nome);
   }
-
 });
 
 router.get("/restaurantes/:id/produtos", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   ProdutoController.selectRestautanteProduto(callback, req.params.id);
 });
 
@@ -207,6 +201,7 @@ router.get("/restaurantes/:restauranteid/produtos/:produtoid", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   const obj = { "restauranteid": req.params.restauranteid, "produtoid": req.params.produtoid }
   ProdutoController.selectRestautanteProdutoEspecifico(callback, obj);
 });
@@ -215,6 +210,7 @@ router.get("/produtos/:id", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   ProdutoController.selectIdProduto(callback, req.params.id);
 });
 
@@ -222,6 +218,7 @@ router.get("/produtos/pesquisa/:text", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   ProdutoController.selectTextProdutos(callback, req.params.text);
 });
 
@@ -235,13 +232,13 @@ router.delete("/produtos/:id", (req, res) => {
 
 router.post("/produtos/atualizar/imagem", (req, res) => {
   function callback() { }
+
   ProdutoController.atualizarImagem(req.body.produtoID, req.body.fotoB64, req.body.deletar, callback);
   res.sendStatus(200);
 })
 
 
 router.post("/produtos/opcoes", function (req, res) {
-
   function callbackOpcoes(opcaoID) {
     OpcaoController.insertAdicionais(req.body.data.itens, req.body.data.produtoID, opcaoID)
   }
@@ -264,6 +261,7 @@ router.get("/produtos/opcoes", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   OpcaoController.selectAllOpcoes(callback);
 });
 
@@ -272,6 +270,7 @@ router.get("/produtos/opcoes/:id", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   OpcaoController.selectIdOpcao(callback, req.params.id);
 });
 
@@ -280,17 +279,16 @@ router.get("/produtos/:id/opcoes", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   OpcaoController.selecionarOpcoesProduto(callback, req.params.id);
 });
 
-// Essa rota pega as opções referente ao ID do Produto e junta;
+// Essa rota pega as opções referente ao ID do Produto e junta
 // com os adicionais para mostrar na tela de produto no app.
 router.get("/produtos/:id/opcoes/mobile", (req, res) => {
-
   let opcoesAdicionalProduto = []
 
   function callback(opcoes) {
-
     function callbackOpcoesAdicionais(opcaoAdicional) {
       opcoesAdicionalProduto.push(opcaoAdicional);
 
@@ -303,7 +301,6 @@ router.get("/produtos/:id/opcoes/mobile", (req, res) => {
       const opcao = opcoes[index];
       OpcaoController.selecionarAdicionalOpcao(callbackOpcoesAdicionais, opcao.ID)
     }
-
   }
 
   OpcaoController.selecionarOpcoesProduto(callback, req.params.id);
@@ -314,7 +311,6 @@ router.delete("/produtos/opcoes/:id", (req, res) => {
   res.sendStatus(200);
 });
 // ========================================================================
-
 
 // ===================== Adicionais da opção ================================
 router.get("/adicionais/opcoes/:id", (req, res) => {
@@ -327,13 +323,11 @@ router.get("/adicionais/opcoes/:id", (req, res) => {
       }
       OpcaoController.selectAllAdicionais(callbackAdicionais, row);
     }
-
   }
 
   OpcaoController.selectAllAdicionaisOpcao(callback, req.params.id);
 });
 // ========================================================================
-
 
 // ===================== Vinculo opção em adicional ======================
 
@@ -349,7 +343,6 @@ router.post("/opcao/adicional", function (req, res) {
     req.body.data.opcaoID,
     req.body.data.adicionalID
   );
-
 });
 
 router.get("/opcao/adicional/:id", function (req, res) {
@@ -371,14 +364,12 @@ router.get("/opcao/adicional/:id", function (req, res) {
         res.json(opcoeVinculada);
       }
     }
-
   }
+
   OpcaoController.buscarOpcoesVinculadas(callback, req.params.id);
 });
 
-
 router.post("/opcao/deletar", (req, res) => {
-
   let opcoesVinculadas = []
 
   for (let index = 0; index < req.body.opcoesVinculadas.length; index++) {
@@ -400,13 +391,11 @@ router.delete("/opcao/:opcaoID/adicional/:adicionalID", (req, res) => {
 
 // Pega as opções vinculadas ao o adicional.
 router.get("/opcao/vinculo/adicional/:id", function (req, res) {
-
   let opcoesAdicionalProduto = []
 
   function callback(opcoes) {
     function callbackOpcoesAdicionais(opcaoAdicional) {
       opcoesAdicionalProduto.push(opcaoAdicional);
-
       if (opcoes.length === opcoesAdicionalProduto.length) {
         res.json(opcoesAdicionalProduto);
       }
@@ -416,11 +405,10 @@ router.get("/opcao/vinculo/adicional/:id", function (req, res) {
       const opcao = opcoes[index];
       OpcaoController.selecionarAdicionalOpcaoVinculada(callbackOpcoesAdicionais, opcao.ID)
     }
-
   }
+
   OpcaoController.selecionarOpcoesVinculada(callback, req.params.id);
 });
-
 // ========================================================================
 
 // ===================== Restaurante ======================================
@@ -456,6 +444,7 @@ router.get("/restaurantes", (req, res) => {
   function callback(rowRestaurante) {
     res.json(rowRestaurante);
   }
+
   RestauranteController.selectAllRestaurante(callback);
 });
 
@@ -463,13 +452,14 @@ router.get("/restaurantes/:id", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   RestauranteController.selectIdRestaurante(callback, req.params.id);
 });
 
 router.post("/restaurantes/atualizar/logo", (req, res) => {
   function callback() {
-
   }
+
   RestauranteController.atualizarLogo(req.body.restauranteID, req.body.fotoB64, req.body.deletar, callback);
   res.sendStatus(200);
 })
@@ -489,6 +479,7 @@ router.post("/usuarios", async function (req, res) {
     await UsuarioController.salvarFotos(req.body.foto);
     nomeFoto = req.body.foto[0].name;
   }
+
   UsuarioController.insertUsuarios(
     req.body.nome,
     req.body.email,
@@ -496,6 +487,7 @@ router.post("/usuarios", async function (req, res) {
     req.body.senha,
     nomeFoto
   );
+
   res.sendStatus(200);
 });
 
@@ -503,6 +495,7 @@ router.get("/usuarios", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   UsuarioController.selectAllUsuarios(callback);
 });
 
@@ -524,7 +517,6 @@ router.post("/admin/restaurante/cadastrar", async function (req, res) {
   EnderecoController.insertEndereco(req.body.data, callBackEndereco);
 
   async function callBackEndereco(enderecoID) {
-
     RestauranteController.insertRestaurante(req.body.data, enderecoID, callbackRestaurante);
 
     async function callbackRestaurante(restauranteID) {
@@ -540,11 +532,8 @@ router.post("/admin/restaurante/cadastrar", async function (req, res) {
       nomeFotoUsuario = 'defaultusuario.png';
       let senhaCad = req.body.data.senha === undefined ? null : req.body.data.senha;
       await UsuarioController.insertUsuarios(req.body.data, senhaCad, 5, enderecoID, restauranteID, nomeFotoUsuario);
-
     }
-
   }
-
 
   res.sendStatus(200);
 });
@@ -567,10 +556,7 @@ router.put("/admin/restaurante/atualizar", async function (req, res) {
 
 // ===================== Pedidos ==========================================
 router.post("/pedidos", function (req, res) {
-
-
   console.warn(req.body);
-
   // PedidoController.insertPedidos(
   //   req.body.usuarioID,
   //   req.body.restauranteID,
@@ -590,6 +576,7 @@ router.get("/pedidos", (req, res) => {
   function callback(rowPedidos) {
     res.json(rowPedidos);
   }
+
   PedidoController.selectAllPedidos(callback);
 });
 
@@ -597,6 +584,7 @@ router.get("/usuarios/:id/pedidos", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   PedidoController.selectPedidosDesc(callback, req.params.id);
 });
 
@@ -608,6 +596,7 @@ router.post("/usuarios/:id/realizar-pedido", function (req, res) {
   const idRestaurante = req.body.pedido.restaurante;
   const produtos = req.body.pedido.produtos;
   let valorTotal = 0;
+
   produtos.forEach(element => {
     valorTotal = element.total;
   });
@@ -646,6 +635,7 @@ router.put("/pedidos/:id/status/:codStatus", function (req, res) {
     } else {
       message = "O Restaurante teve um problema e não pôde aceitar seu pedido no momento!"
     }
+
     sendMessage(sendMessageTo, 'pedido', message);
   }
 
@@ -673,6 +663,7 @@ router.get("/pedidos/item", (req, res) => {
   function callback(rowItem) {
     res.json(rowItem);
   }
+
   ItemPedidoController.selectAllItem(callback);
 });
 
@@ -680,6 +671,7 @@ router.get("/pedidos/:id/item", (req, res) => {
   function callback(row) {
     res.json(row);
   }
+
   ItemPedidoController.selectIdPedido(callback, req.params.id);
 });
 // ========================================================================

@@ -1,11 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
-
 let db = new sqlite3.Database('./db/sample.db');
-
-// Restaurante contém ==>  Endereço
-// Usuario contem ===> Endereço
-// Produto contém ===> restaurante
-// ProdutoOpção contém ===> Produto
 
 const TABELA_CATEGORIAS =
   "CREATE TABLE categorias (ID INTEGER PRIMARY KEY AUTOINCREMENT, nome_categoria varchar(255), imagem VARCHAR(255), status NUMBER)"
@@ -23,12 +17,12 @@ const TABELA_ADICIONAIS =
   "CREATE TABLE adicionais (ID INTEGER PRIMARY KEY AUTOINCREMENT, nome_adicional varchar(255), desc_adicional varchar(255), valor_adicional REAL, qtd_limite INTEGER, vinculo INTEGER, foto VARCHAR(255))"
 db.run(TABELA_ADICIONAIS);
 
-// Qual adicionais que a opção tem.
+// Qual adicionais que a opcao tem
 const TABELA_OPCOES_ADICIONAIS =
   "CREATE TABLE opcoes_adicionais (ID INTEGER PRIMARY KEY AUTOINCREMENT, opcaoID INTEGER, adicionalID INTEGER)"
 db.run(TABELA_OPCOES_ADICIONAIS);
 
-// Qual opções que está vinculado a adicionais
+// Qual opcao que esta vinculado a adicionais
 const TABELA_ADICIONAIS_OPCOES =
   "CREATE TABLE adicionais_opcoes (ID INTEGER PRIMARY KEY AUTOINCREMENT, opcaoID INTEGER, adicionalID INTEGER)"
 db.run(TABELA_ADICIONAIS_OPCOES);
@@ -56,6 +50,5 @@ db.run(TABELA_PEDIDOS_PRODUTOS);
 const TABELA_PEDIDOS_ADICIONAIS =
   "CREATE TABLE pedidos_adicionais (ID INTEGER PRIMARY KEY AUTOINCREMENT, pedidoID INTEGER, adicionalID INTEGER)"
 db.run(TABELA_PEDIDOS_ADICIONAIS);
-
 
 db.close();

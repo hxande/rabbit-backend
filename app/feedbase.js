@@ -2,7 +2,7 @@ const sqlite3 = require("sqlite3").verbose();
 
 let db = new sqlite3.Database('./db/sample.db');
 
-// ===== ==== ==== Categorias ==== === === ====
+// ==== ==== ==== Categorias ==== ==== ==== ====
 
 const insertOfertas =
   "INSERT INTO categorias (nome_categoria, imagem, status) VALUES ('Ofertas especiais', 'ofertas.png', 1)"
@@ -105,7 +105,7 @@ const INSERIR_RESTAURANTE =
   "INSERT INTO restaurantes (cnpj, razao_social, desc_restaurante, nome_fantasia, telefone, servico_entrega, especialidade, logo, enderecoID, status) VALUES ('00000000000000', 'subyway .ltda', 'restaurante de saladas e sanduiches fitness', 'Subway', '9964240543', 0, 1, 'subwaylagosul.jpeg', 1, 1)"
 db.run(INSERIR_RESTAURANTE);
 
-// @@@@ ==-========= produtos do Restaurante padrão  ======== ====
+// @@@@ ========= produtos do Restaurante padrão  ============
 
 const INSERIR_PRODUTO_RESTAURANTE1 =
   "INSERT INTO produtos (nome_produto, categoria, desc_produto, imagem, valor, restauranteID, status) VALUES ('Combo Frango Teriaki', 2, 'Sanduiche de 15 cm com recheio de frango teriaki, cockie tradicional e refrigerante', '/img/produtos/subway_combo2.jpg', 25, 1, 1)"
@@ -197,8 +197,6 @@ const INSERIR_RELACAO_ADICIONAL3_OPCAO3_PRODUTO_RESTAURANTE1 =
 db.run(INSERIR_RELACAO_ADICIONAL3_OPCAO3_PRODUTO_RESTAURANTE1);
 // =======
 
-
-
 // @@@@@@@@@ =========== Opções 4 do produto 1 ======== ====
 const INSERIR_OPCAO4_PRODUTO_RESTAURANTE1 =
   "INSERT INTO opcoes (nome_opcao, obrigatorio, qtd_obrigatorio, selecao, produtoID, vinculo) VALUES ('Escolha os itens da salada', 0, 2, 2, 1, 0)"
@@ -233,12 +231,5 @@ const INSERIR_RELACAO_ADICIONAL4_OPCAO4_PRODUTO_RESTAURANTE1 =
   "INSERT INTO opcoes_adicionais (opcaoID, adicionalID) VALUES (4, 10)"
 db.run(INSERIR_RELACAO_ADICIONAL4_OPCAO4_PRODUTO_RESTAURANTE1);
 // =======
-
-
-// @@@@@@@@@ ===== ==== ==== ==== === ==== === === ====
-
-// ===== ==== ==== ==== === ==== === === ====
-
-// ===== ==== ==== ==== === ==== === === ====
 
 db.close();
