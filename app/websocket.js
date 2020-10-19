@@ -12,7 +12,7 @@ exports.setupWebsocket = (server) => {
             usuario,
         });
 
-        socket.on("disconnect", () => console.log("Client disconnected"));
+        io.on("disconnect", () => console.log("Client disconnected"));
     });
 };
 
