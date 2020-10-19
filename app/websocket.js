@@ -11,6 +11,8 @@ exports.setupWebsocket = (server) => {
             id: socket.id,
             usuario,
         });
+
+        socket.on("disconnect", () => console.log("Client disconnected"));
     });
 };
 
