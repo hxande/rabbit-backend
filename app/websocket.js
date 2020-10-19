@@ -1,4 +1,4 @@
-const socketio = require('socket.io')(https);
+const socketio = require('socket.io');
 
 let io;
 const connections = [];
